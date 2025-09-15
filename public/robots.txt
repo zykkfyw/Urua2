@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://orua-organics.pages.dev/sitemap.xml
+
+# Optimize crawling
+Crawl-delay: 1
+
+# Allow access to CSS and JS files
+Allow: /static/
+
+# Specific pages to prioritize
+Allow: /products/
+Allow: /privacy
+Allow: /terms
+
+# Contact information
+# Contact: hello@oruaorganics.com

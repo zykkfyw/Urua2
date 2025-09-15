@@ -4,6 +4,8 @@ import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
 import routes from './routes'
 import legal from './legal'
+import sitemap from './sitemap'
+import errors from './errors'
 
 const app = new Hono()
 
@@ -19,6 +21,83 @@ app.use(renderer)
 // Mount additional routes
 app.route('/', routes)
 app.route('/', legal)
+app.route('/', sitemap)
+
+// 404 handler for unmatched routes
+app.notFound((c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Page Not Found | Orua Organics</title>
+        <meta name="robots" content="noindex, nofollow">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="/static/style.css" rel="stylesheet">
+        <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                  colors: {
+                    'orua-green': '#2d5016',
+                    'orua-gold': '#d4a574',
+                    'orua-brown': '#8b4513',
+                    'orua-light': '#f5f3f0',
+                    'orua-dark': '#1a3508'
+                  },
+                  fontFamily: {
+                    'orua': ['Playfair Display', 'serif'],
+                    'body': ['Inter', 'sans-serif']
+                  }
+                }
+              }
+            }
+        </script>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+    <body class="bg-orua-light font-body text-gray-800 min-h-screen flex flex-col">
+        <nav class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <a href="/" class="flex items-center">
+                            <img src="/static/logo.svg" alt="Orua Organics" class="h-10 w-auto">
+                            <span class="ml-2 text-xl font-orua font-semibold text-orua-dark">Orua Organics</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <main class="flex-1 flex items-center justify-center">
+            <div class="text-center px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-full w-32 h-32 mx-auto mb-8 flex items-center justify-center">
+                    <i class="fas fa-seedling text-6xl text-green-600"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-orua font-bold text-orua-dark mb-4">Page Not Found</h1>
+                <p class="text-xl text-gray-600 mb-8 max-w-md mx-auto">
+                    Oops! The page you're looking for seems to have wandered off into the African wilderness.
+                </p>
+                <div class="space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
+                    <a href="/" class="block sm:inline-block bg-orua-green text-white px-8 py-3 rounded-lg hover:bg-orua-dark transition-colors">
+                        <i class="fas fa-home mr-2"></i>Go Home
+                    </a>
+                    <a href="/#products" class="block sm:inline-block border-2 border-orua-green text-orua-green px-8 py-3 rounded-lg hover:bg-orua-green hover:text-white transition-colors">
+                        <i class="fas fa-leaf mr-2"></i>Browse Products
+                    </a>
+                </div>
+            </div>
+        </main>
+        <footer class="bg-orua-dark text-white py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <p class="text-gray-300">&copy; 2024 Orua Organics. Rooted in Africa. Grown for the World.</p>
+            </div>
+        </footer>
+    </body>
+    </html>
+  `, 404)
+})
 
 // Home page
 app.get('/', (c) => {

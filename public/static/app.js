@@ -303,5 +303,74 @@ document.addEventListener('DOMContentLoaded', function() {
     
     images.forEach(img => imageObserver.observe(img));
     
+    // Add search functionality for products
+    function addProductSearch() {
+        const searchInput = document.createElement('div');
+        searchInput.innerHTML = `
+            <div class="relative hidden md:block">
+                <input type="text" id="product-search" placeholder="Search products..." 
+                       class="bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-orua-green focus:border-orua-green">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+        `;
+        
+        const navbar = document.querySelector('nav .flex.justify-between');
+        if (navbar) {
+            navbar.appendChild(searchInput);
+        }
+        
+        // Add search functionality
+        const searchField = document.getElementById('product-search');
+        if (searchField) {
+            searchField.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                const productCards = document.querySelectorAll('#products .grid > div');
+                
+                productCards.forEach(card => {
+                    const productName = card.querySelector('h3')?.textContent.toLowerCase();
+                    const productDescription = card.querySelector('p')?.textContent.toLowerCase();
+                    
+                    if (productName?.includes(query) || productDescription?.includes(query) || query === '') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+    }
+    
+    // Add product search if on main page
+    if (window.location.pathname === '/') {
+        setTimeout(addProductSearch, 1000);
+    }
+    
+    // Add scroll progress indicator
+    function addScrollProgress() {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'fixed top-0 left-0 w-0 h-1 bg-orua-green z-50 transition-all duration-100';
+        progressBar.style.backgroundColor = '#2d5016';
+        document.body.appendChild(progressBar);
+        
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            progressBar.style.width = scrollPercent + '%';
+        });
+    }
+    
+    addScrollProgress();
+    
+    // Add loading animation for external links
+    document.querySelectorAll('a[href^="http"], a[href^="#shop"]').forEach(link => {
+        link.addEventListener('click', function() {
+            if (!this.href.includes(window.location.hostname)) {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + this.textContent;
+                this.classList.add('pointer-events-none');
+            }
+        });
+    });
+    
     console.log('Orua Organics website loaded successfully!');
 });

@@ -2,6 +2,8 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { renderer } from './renderer'
+import routes from './routes'
+import legal from './legal'
 
 const app = new Hono()
 
@@ -11,8 +13,12 @@ app.use('/api/*', cors())
 // Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
 
-// Apply renderer to all routes
+// Apply renderer to main routes
 app.use(renderer)
+
+// Mount additional routes
+app.route('/', routes)
+app.route('/', legal)
 
 // Home page
 app.get('/', (c) => {
@@ -150,9 +156,9 @@ app.get('/', (c) => {
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Oils</span>
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Powder</span>
                 </div>
-                <button class="w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors">
+                <a href="/products/moringa" class="block w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors text-center">
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
             
@@ -169,9 +175,9 @@ app.get('/', (c) => {
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Balms</span>
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Powder</span>
                 </div>
-                <button class="w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors">
+                <a href="/products/turmeric" class="block w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors text-center">
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
             
@@ -188,9 +194,9 @@ app.get('/', (c) => {
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Powder</span>
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Oils</span>
                 </div>
-                <button class="w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors">
+                <a href="/products/baobab" class="block w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors text-center">
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
             
@@ -206,9 +212,9 @@ app.get('/', (c) => {
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Teas</span>
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Extracts</span>
                 </div>
-                <button class="w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors">
+                <a href="/products/soursop" class="block w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors text-center">
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
             
@@ -225,9 +231,9 @@ app.get('/', (c) => {
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Oils</span>
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Balms</span>
                 </div>
-                <button class="w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors">
+                <a href="/products/ginger" class="block w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors text-center">
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
             
@@ -243,9 +249,9 @@ app.get('/', (c) => {
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Teas</span>
                   <span class="bg-orua-light text-orua-green px-2 py-1 rounded text-sm">Extracts</span>
                 </div>
-                <button class="w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors">
+                <a href="/products/noni" class="block w-full bg-orua-green text-white py-2 px-4 rounded hover:bg-orua-dark transition-colors text-center">
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -525,8 +531,8 @@ app.get('/', (c) => {
                 <li><a href="#about" class="text-gray-300 hover:text-orua-gold transition-colors">About Us</a></li>
                 <li><a href="#sustainability" class="text-gray-300 hover:text-orua-gold transition-colors">Sustainability</a></li>
                 <li><a href="#contact" class="text-gray-300 hover:text-orua-gold transition-colors">Contact</a></li>
-                <li><a href="#" class="text-gray-300 hover:text-orua-gold transition-colors">Privacy Policy</a></li>
-                <li><a href="#" class="text-gray-300 hover:text-orua-gold transition-colors">Terms of Service</a></li>
+                <li><a href="/privacy" class="text-gray-300 hover:text-orua-gold transition-colors">Privacy Policy</a></li>
+                <li><a href="/terms" class="text-gray-300 hover:text-orua-gold transition-colors">Terms of Service</a></li>
               </ul>
             </div>
             <div>
